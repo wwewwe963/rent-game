@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  php-apache-environment:
+    container_name: php-apache
+    build:
+      context: ./main
+      dockerfile: Dockerfile
+    volumes:
+      - ./main/application:/var/www/html/
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: pdo_db
+    ports:
+      - "9906:3306"
+
+  phpmyadmin: 
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8000:80"
+    restart: always
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: 1234
+    depends_on:
+      - db
+      
